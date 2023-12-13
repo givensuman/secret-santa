@@ -1,0 +1,16 @@
+---
+import WindowPath from "../components/WindowPath";
+---
+
+<main class="h-screen w-full bg-gray-700 flex flex-col justify-center items-center z-10 p-4">
+    <div class="flex flex-col items-center bg-gray-800 p-7 rounded-lg shadow-xl text-gray-400 font-bold text-3xl cursor-default max-w-2xl">
+        <h1>
+        The path of 
+        <span class="font-mono bg-gray-900 px-2 py-1 rounded-md text-2xl">
+            <WindowPath client:only />
+        </span>
+        doesn't map to anyone in the exchange.
+        </h1> 
+        <h3 class="mt-4 text-2xl">Make sure you've entered it right, or check with the organizer for more details.</h3>
+    </div>
+</main>

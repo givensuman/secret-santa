@@ -1,0 +1,29 @@
+---
+import Cryptr from "cryptr";
+import exchangeJSON from "../../exchange/exchange.json";
+import Snow from "../components/Snow";
+
+export function getStaticPaths() {
+    const ids = Object.keys(exchangeJSON)
+
+    return [...ids.map(id => (
+        { params: { id }}
+    ))]
+}
+
+const { id } = Astro.params
+let { gifter, recipient } = (exchangeJSON as any)[id]
+
+const c = new Cryptr(id)
+recipient = c.decrypt(recipient)
+---
+
+<Snow client:load />
+
+<main class="h-screen w-full bg-gray-700 flex flex-col justify-center items-center z-10 p-4">
+    <div class="flex flex-col items-center bg-gray-800 p-7 rounded-lg shadow-xl text-gray-400 font-bold text-3xl cursor-default max-w-2xl">
+        <h1>Hello {gifter}!</h1>
+        <h3>You're finding a gift for {recipient} this year.</h3>
+        <h3 class="mt-4 text-2xl">Good luck and have fun!</h3>
+    </div>
+</main>
