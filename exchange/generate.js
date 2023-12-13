@@ -1,8 +1,16 @@
 import Cryptr from "cryptr";
+import dotenv from "dotenv";
 import fs from "fs";
 import { nanoid } from "nanoid";
 
-const names = ["Corky", "Mama Jewels", "Celia", "Michel", "Emma", "Given"];
+dotenv.config();
+
+let names;
+try {
+  names = process.env.NAMES.split(",");
+} catch (err) {
+  throw new Error("No 'NAMES' field in .env!");
+}
 
 function shuffle(array) {
   let currentIndex = array.length,
@@ -23,16 +31,19 @@ function shuffle(array) {
 
 shuffle(names);
 
+const linkMap = {};
 const exchangeMap = {};
 
 names.forEach((name, index) => {
   const id = nanoid(10);
   const c = new Cryptr(id);
 
+  linkMap[id] = name;
+
   const recipient = index == names.length - 1 ? names[0] : names[index + 1];
 
   exchangeMap[id] = {
-    gifter: name,
+    gifter: c.encrypt(name),
     recipient: c.encrypt(recipient),
   };
 });
@@ -44,8 +55,9 @@ fs.writeFileSync("./exchange/exchange.json", json, (err) => {
 
 const msg = "Successfully generated the exchange!";
 console.log(msg);
-console.log("=".repeat(msg.length) + "\n");
-console.log("Text the following links to their corresponding person!");
-Object.keys(exchangeMap).forEach((key) => {
-  console.log(`${exchangeMap[key].gifter} => /${key}`);
+console.log("=".repeat(msg.length));
+console.log("Send the following links to their corresponding participant:");
+console.log("\n");
+Object.entries(linkMap).forEach(([key, value]) => {
+  console.log(`${value} => /${key}`);
 });

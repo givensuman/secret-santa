@@ -15,6 +15,7 @@ const { id } = Astro.params
 let { gifter, recipient } = (exchangeJSON as any)[id]
 
 const c = new Cryptr(id)
+gifter = c.decrypt(gifter)
 recipient = c.decrypt(recipient)
 ---
 
